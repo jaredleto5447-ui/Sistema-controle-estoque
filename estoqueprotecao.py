@@ -87,7 +87,18 @@ def salvar_estoque(produtos):
         print("estoque salvo com sucesso!")
 
 
-produtos = []
+def carregar_estoque():
+    try:
+        with (open("estoque.json", "r", encoding="utf-8") as arquivo):
+            return json.load(arquivo)
+    except FileNotFoundError:
+        return []
+    except json.decoder.JSONDecodeError:
+        print("erro ao carregar estoque")
+        return []
+
+
+produtos = carregar_estoque()
 
 while True:
     print("1 - adicionar produto")
@@ -108,6 +119,7 @@ while True:
             preco = float(input("preco:"))
             quantidade = int(input("quantidade:"))
             adicionar_produto(produtos, nome, preco, quantidade)
+            salvar_estoque(produtos)
 
         except ValueError:
             print("error: digite valores numericos validos!")
